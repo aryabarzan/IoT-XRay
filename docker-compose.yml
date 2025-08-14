@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    restart: always
+    ports:
+      - "37017:27017"
+    volumes:
+      - ./data/mongodb:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "6672:5672" # پورت اصلی RabbitMQ
+      - "25672:15672" # پورت RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+
+  consumer:
+    build:
+      context: ./iot-xray-consumer
+      dockerfile: Dockerfile
+    container_name: iot-xray-consumer
+    restart: always
+    ports:
+      - "4000:3000"
+    environment:
+      APP_PORT: 3000
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_PREFETCH_COUNT: 2
+      MONGO_URI: mongodb://mongodb:27017/iot-xray
+    depends_on:
+      - rabbitmq
+      - mongodb
+    volumes:
+      - ./iot-xray-consumer:/app
+      - /app/node_modules
+
+  producer:
+    build:
+      context: ./iot-xray-producer
+      dockerfile: Dockerfile
+    container_name: iot-xray-producer
+    restart: always
+    ports:
+      - "4001:3001"
+    environment:
+      APP_PORT: 3001
+      RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_PREFETCH_COUNT: 2
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./iot-xray-producer:/app
+      - /app/node_modules
