@@ -8,16 +8,26 @@ services:
       - "37017:27017"
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ ping: 1 })' --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
       - "6672:5672"
-      - "25672:15672" # The management UI port
+      - "25672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   iot-xray-consumer:
     build: ./iot-xray-consumer
@@ -30,8 +40,10 @@ services:
     ports:
       - "4000:3000"
     depends_on:
-      - mongo
-      - rabbitmq
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   iot-xray-producer:
     build: ./iot-xray-producer
@@ -43,7 +55,8 @@ services:
     ports:
       - "4001:3001"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   mongo_data:
