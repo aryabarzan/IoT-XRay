@@ -1,9 +1,9 @@
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { exchangeName } from 'src/lib/const';
-import { ProducerService } from './producer.service';
+import { exchangeName } from 'src/lib/exchange';
 import { ProducerController } from './producer.controller';
+import { ProducerService } from './producer.service';
 
 @Module({
   imports: [
@@ -11,12 +11,9 @@ import { ProducerController } from './producer.controller';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const uri = configService.get<string>(
-          'RABBITMQ_URI',
-          'amqp://guest:guest@localhost:5672',
-        );
+        const uri = configService.getOrThrow<string>('RABBITMQ_URI');
         const prefetchCount = Number(
-          configService.get<number>('RABBITMQ_PREFETCH_COUNT', 10),
+          configService.getOrThrow<number>('RABBITMQ_PREFETCH_COUNT'),
         );
 
         return {

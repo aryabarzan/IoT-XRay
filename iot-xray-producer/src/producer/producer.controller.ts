@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { XrayDataRequestDto } from './types';
-import { XrayDataPipe } from './pipe/xray-data.pip';
+import { XrayDataPipe } from './pipe/xray-data.pipe';
 import { ProducerService } from './producer.service';
 
 @ApiTags('Producer')

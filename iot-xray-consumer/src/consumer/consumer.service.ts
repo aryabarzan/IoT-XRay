@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { DeviceDto, type XrayDataRequestDto } from './types';
-import { exchangeName } from '../lib/const';
+import { exchangeName } from '../lib/exchange';
 import { SignalService } from '../signal';
 
 @Injectable()

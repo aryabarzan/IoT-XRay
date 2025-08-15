@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConsumerModule } from './consumer';
-import { exchangeName } from './lib/const';
+import { exchangeName } from './lib/exchange';
 
 @Module({
   imports: [
@@ -17,12 +17,9 @@ import { exchangeName } from './lib/const';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const uri = configService.get<string>(
-          'RABBITMQ_URI',
-          'amqp://guest:guest@localhost:5672',
-        );
+        const uri = configService.getOrThrow<string>('RABBITMQ_URI');
         const prefetchCount = Number(
-          configService.get<number>('RABBITMQ_PREFETCH_COUNT', 10),
+          configService.getOrThrow<number>('RABBITMQ_PREFETCH_COUNT'),
         );
 
         return {
@@ -44,7 +41,7 @@ import { exchangeName } from './lib/const';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
+        uri: configService.getOrThrow<string>('MONGO_URI'),
       }),
     }),
     ConsumerModule,
