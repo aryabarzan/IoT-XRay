@@ -30,6 +30,9 @@ The Swagger UI for the services will be available at:
 -   `iot-xray-producer`: http://localhost:4001/swagger
 -   `iot-xray-consumer`: http://localhost:4000/swagger
 
+
+To test the data flow, open the `iot-xray-producer` Swagger UI (http://localhost:4001/swagger). Navigate to the `/producer/publish-manual` endpoint. Copy the content of the `x-ray.json` file (located at the project root) and paste it into the request body. Execute the request. You should then observe that the data is saved into the `signal` collection in your MongoDB database.
+
 ### RabbitMQ Management Interface
 
 If you are running RabbitMQ via Docker Compose, you can access its management interface at:
