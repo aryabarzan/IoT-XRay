@@ -8,7 +8,7 @@ import { Signal } from '../signal/schemas/signal.schema';
 
 // NOTE: This integration test requires running RabbitMQ and MongoDB services.
 // You can start them using `docker-compose up -d` from the root of the project.
-// The .env file should be configured to point to these services.
+// The .env.test file should be configured to point to the test instances of these services.
 describe('ConsumerService (Integration)', () => {
   let app: INestApplication;
   let consumerService: ConsumerService;
