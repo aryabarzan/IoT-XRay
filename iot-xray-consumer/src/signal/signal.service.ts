@@ -12,10 +12,22 @@ import {
   UpdateSignalDto,
 } from './type';
 
+/**
+ * Service for managing Signal documents in the database.
+ *
+ * This service provides methods for creating, retrieving, updating, and
+ * deleting signals. It also includes specialized functionality for
+ * processing and saving incoming X-ray data messages from RabbitMQ.
+ */
 @Injectable()
 export class SignalService {
   private readonly logger = new Logger(SignalService.name);
 
+  /**
+   * Constructs the SignalService and injects the Mongoose Signal model.
+   *
+   * @param signalModel The Mongoose model for the Signal schema.
+   */
   constructor(@InjectModel(Signal.name) private signalModel: Model<Signal>) {}
 
   /**
@@ -74,19 +86,43 @@ export class SignalService {
     }
   }
 
+  /**
+   * Creates and saves a single new signal document.
+   *
+   * @param createSignalDto The DTO containing the data for the new signal.
+   * @returns A promise that resolves to the newly created Signal document.
+   */
   async create(createSignalDto: CreateSignalDto): Promise<Signal> {
     const createdSignal = new this.signalModel(createSignalDto);
     return createdSignal.save();
   }
 
+  /**
+   * Retrieves all signal documents from the database.
+   *
+   * @returns A promise that resolves to an array of all Signal documents.
+   */
   async findAll(): Promise<Signal[]> {
     return this.signalModel.find().exec();
   }
 
+  /**
+   * Finds a single signal document by its unique UUID.
+   *
+   * @param id The UUID of the signal to find.
+   * @returns A promise that resolves to the found Signal document, or null if not found.
+   */
   async findOne(id: string): Promise<Signal | null> {
     return this.signalModel.findOne({ uuid: id }).exec();
   }
 
+  /**
+   * Updates an existing signal document by its UUID.
+   *
+   * @param id The UUID of the signal to update.
+   * @param updateSignalDto The DTO containing the fields to update.
+   * @returns A promise that resolves to the updated Signal document, or null if not found.
+   */
   async update(
     id: string,
     updateSignalDto: UpdateSignalDto,
@@ -96,10 +132,26 @@ export class SignalService {
       .exec();
   }
 
+  /**
+   * Deletes a signal document by its UUID.
+   *
+   * @param id The UUID of the signal to delete.
+   * @returns A promise that resolves to the deleted Signal document, or null if not found.
+   */
   async delete(id: string): Promise<Signal | null> {
     return this.signalModel.findOneAndDelete({ uuid: id }).exec();
   }
 
+  /**
+   * Retrieves a paginated and filtered list of signals.
+   *
+   * This method supports filtering by device ID, UUID, time, data length, and data volume,
+   * and provides a paginated response.
+   *
+   * @param filters The DTO containing the filters to apply.
+   * @param pagination The DTO containing the pagination options (page and limit).
+   * @returns A promise that resolves to an object containing the filtered data and pagination information.
+   */
   async findWithFilters(
     filters: FilterSignalDto,
     pagination: PaginationDto,
@@ -147,6 +199,12 @@ export class SignalService {
     };
   }
 
+  /**
+   * Deletes all signal documents associated with a specific device ID.
+   *
+   * @param deviceId The ID of the device whose signals should be deleted.
+   * @returns A promise that resolves to an object with the number of deleted documents and a message.
+   */
   async deleteByDeviceId(deviceId: string) {
     const result = await this.signalModel.deleteMany({ deviceId });
     return {
@@ -154,5 +212,4 @@ export class SignalService {
       message: `${result.deletedCount} signals deleted for deviceId: ${deviceId}`,
     };
   }
-  
 }

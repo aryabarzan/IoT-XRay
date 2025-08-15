@@ -7,10 +7,23 @@ import { exchangeName } from '../common/exchange';
 import { SignalService } from '../signal';
 import { DeviceDto, type XrayDataRequestDto } from './types';
 
+/**
+ * Service responsible for consuming and processing x-ray data messages from RabbitMQ.
+ *
+ * This service subscribes to a specific RabbitMQ queue, handles incoming messages,
+ * validates their payload, and delegates the processing of the data to the SignalService.
+ * It also manages message acknowledgments and error handling to ensure message
+ * durability and system reliability.
+ */
 @Injectable()
 export class ConsumerService {
   private readonly logger = new Logger(ConsumerService.name);
 
+  /**
+   * Constructs the ConsumerService and injects the necessary dependencies.
+   *
+   * @param signalService An instance of the SignalService for creating and storing signals.
+   */
   constructor(private readonly signalService: SignalService) {}
 
   /**
