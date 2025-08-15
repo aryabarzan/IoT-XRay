@@ -8,11 +8,11 @@ import type { XrayDataRequestDto } from './types';
 export class ProducerController {
   constructor(private readonly producerService: ProducerService) {}
 
-  @Get('status')
-  @ApiOperation({ summary: 'Getting the summery of Producer' })
-  async getStatus() {
-    return 'Producer is running and sending messages automatically.';
-  }
+  // @Get('status')
+  // @ApiOperation({ summary: 'Getting the summery of Producer' })
+  // async getStatus() {
+  //   return 'Producer is running and sending messages automatically.';
+  // }
 
   /**
    * Publishes x-ray data to the RabbitMQ exchange manually via an HTTP POST request.
