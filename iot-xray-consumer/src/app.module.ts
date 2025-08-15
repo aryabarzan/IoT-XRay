@@ -11,7 +11,7 @@ import { exchangeName } from './common/exchange';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     RabbitMQModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,8 +27,8 @@ import { exchangeName } from './common/exchange';
           },
         ],
         uri: configService.getOrThrow<string>('RABBITMQ_URI'),
-        prefetchCount: configService.getOrThrow<number>(
-          'RABBITMQ_PREFETCH_COUNT',
+        prefetchCount: Number(
+          configService.getOrThrow<number>('RABBITMQ_PREFETCH_COUNT'),
         ),
       }),
     }),

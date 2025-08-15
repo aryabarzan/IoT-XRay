@@ -21,8 +21,8 @@ import { ProducerService } from './producer.service';
           },
         ],
         uri: configService.getOrThrow<string>('RABBITMQ_URI'),
-        prefetchCount: configService.getOrThrow<number>(
-          'RABBITMQ_PREFETCH_COUNT',
+        prefetchCount: Number(
+          configService.getOrThrow<number>('RABBITMQ_PREFETCH_COUNT'),
         ),
       }),
     }),
