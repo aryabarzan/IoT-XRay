@@ -79,12 +79,17 @@ You can also run the services locally without Docker. You will need to have Rabb
 
 3.  **Start the services:**
 
-    For each service, navigate to its directory and start the service:
+    Open two separate terminal windows. In each terminal, navigate to one of the service directories (`iot-xray-producer` or `iot-xray-consumer`) and start the service:
 
+    **Terminal 1:**
     ```bash
     cd iot-xray-producer
     npm run start:dev
-    cd ../iot-xray-consumer
+    ```
+
+    **Terminal 2:**
+    ```bash
+    cd iot-xray-consumer
     npm run start:dev
     ```
 
@@ -113,3 +118,13 @@ MONGO_URI=mongodb://localhost:27017/iot-xray-test
 RABBITMQ_URI=amqp://guest:guest@localhost:5672/test
 RABBITMQ_PREFETCH_COUNT=2
 ```
+
+## Data Flow
+
+The data flow within the IoT X-Ray system is as follows:
+
+1.  **Producer Sends Data:** The `iot-xray-producer` service generates x-ray data (either manually via its Swagger UI or through other means) and publishes these messages to a RabbitMQ exchange.
+2.  **Consumer Receives Data:** The `iot-xray-consumer` service, specifically its `ConsumerService`, is configured to listen for messages on a RabbitMQ queue that is bound to the producer's exchange.
+3.  **Data Processing:** Upon receiving a message, the `ConsumerService` processes the raw x-ray data. This processing may involve validation, transformation, or enrichment of the data.
+4.  **Signal Service Handles Data:** The processed data is then passed to the `SignalService` within the `iot-xray-consumer`.
+5.  **Data Persistence:** The `SignalService` is responsible for persisting the refined signal data into the MongoDB database, adhering to the schema defined in `signal/schemas/signal.schema.ts`.
