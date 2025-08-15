@@ -10,26 +10,21 @@ import { ProducerService } from './producer.service';
     RabbitMQModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const uri = configService.getOrThrow<string>('RABBITMQ_URI');
-        const prefetchCount = Number(
-          configService.getOrThrow<number>('RABBITMQ_PREFETCH_COUNT'),
-        );
-
-        return {
-          exchanges: [
-            {
-              name: exchangeName,
-              type: 'topic',
-              options: {
-                durable: true,
-              },
+      useFactory: (configService: ConfigService) => ({
+        exchanges: [
+          {
+            name: exchangeName,
+            type: 'topic',
+            options: {
+              durable: true,
             },
-          ],
-          uri,
-          prefetchCount,
-        };
-      },
+          },
+        ],
+        uri: configService.getOrThrow<string>('RABBITMQ_URI'),
+        prefetchCount: configService.getOrThrow<number>(
+          'RABBITMQ_PREFETCH_COUNT',
+        ),
+      }),
     }),
   ],
   providers: [ProducerService],
