@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConsumerModule } from './consumer';
-import { exchangeName } from './lib/exchange';
+import { exchangeName } from './common/exchange';
 
 @Module({
   imports: [

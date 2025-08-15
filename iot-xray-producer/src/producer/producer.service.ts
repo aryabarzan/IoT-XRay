@@ -2,7 +2,7 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-import { exchangeName } from '../lib/exchange';
+import { exchangeName } from '../common/exchange';
 import { DeviceDto, XrayDataRequestDto } from './types';
 
 @Injectable()

@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { DeviceDto, type XrayDataRequestDto } from './types';
-import { exchangeName } from '../lib/exchange';
+import { exchangeName } from '../common/exchange';
 import { SignalService } from '../signal';
 
 @Injectable()
@@ -26,16 +26,10 @@ export class ConsumerService {
 
     try {
       // Step 1: Filter and validate the incoming message payload
-      const cleanedData = await this._cleanData(msg);
+      const cleanedData = await this.cleanData(msg);
 
       if (!cleanedData) {
         this.logger.error('Invalid message structure received.');
-        // Reject the message without requeueing it, sending it to the Dead Letter Queue (DLQ)
-        return new Nack(false);
-      }
-
-      if (Object.keys(cleanedData).length === 0) {
-        this.logger.warn('No valid device data found in the message.');
         // Reject the message without requeueing it, sending it to the Dead Letter Queue (DLQ)
         return new Nack(false);
       }
@@ -60,23 +54,25 @@ export class ConsumerService {
   }
 
   /**
-   * validates, cleans, and transforms the raw message payload from RabbitMQ.
+   * Processes and validates a raw message payload from RabbitMQ.
    *
-   * This function iterates through each device in the incoming message,
-   * transforms its data into the expected DTO format, and validates it.
-   * Devices with invalid data are skipped.
+   * This function iterates through a message, which is expected to be an object
+   * where each key represents a device. For each device, it transforms the raw
+   * telemetry data into a structured DTO and performs validation. Invalid device
+   * data is skipped and not included in the final output.
    *
-   * The expected input format for a device's data is an array of tuples:
+   * The expected format for a device's data is an array of tuples:
    * `[timestamp, [latitude, longitude, speed]]`
    *
-   * This is transformed into an array of `PointInfoDto` objects.
+   * This is converted into an array of `PointInfoDto` objects for easier
+   * processing and validation.
    *
-   * @param msg The raw message object received from RabbitMQ.
-   * @returns A promise that resolves to a validated `XrayDataRequestDto` object
-   *          containing only the valid device data, or `null` if the initial
-   *          message structure is invalid.
+   * @param msg The raw message object received from the RabbitMQ queue.
+   * @returns A promise that resolves to a validated `XrayDataRequestDto` object,
+   * containing only the valid device data. Returns `null` if the initial
+   * message structure is invalid or if no valid device data is found.
    */
-  private async _cleanData(msg: any): Promise<XrayDataRequestDto | null> {
+  private async cleanData(msg: any): Promise<XrayDataRequestDto | null> {
     if (!msg || typeof msg !== 'object') {
       return null; // Invalid device data structure
     }
@@ -111,6 +107,7 @@ export class ConsumerService {
       }
     }
 
-    return transformedData;
+    //if data is empty then return null
+    return Object.keys(transformedData).length === 0 ? null : transformedData;
   }
 }

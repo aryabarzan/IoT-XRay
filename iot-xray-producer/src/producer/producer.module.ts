@@ -1,7 +1,7 @@
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { exchangeName } from 'src/lib/exchange';
+import { exchangeName } from 'src/common/exchange';
 import { ProducerController } from './producer.controller';
 import { ProducerService } from './producer.service';
 
