@@ -1,7 +1,7 @@
 import { Nack } from '@golevelup/nestjs-rabbitmq';
 import { Logger } from '@nestjs/common';
-import { ConsumerService } from './consumer.service';
-import { DeviceDto, XrayDataRequestDto } from './types';
+import { ConsumerService } from '../consumer.service';
+import { DeviceDto, XrayDataRequestDto } from '../types';
 
 /**
  * Test suite for ConsumerService

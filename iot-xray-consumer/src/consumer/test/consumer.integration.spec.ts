@@ -2,9 +2,9 @@ import { INestApplication } from '@nestjs/common';
 import { getConnectionToken, getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Connection, Model } from 'mongoose';
-import { AppModule } from '../app.module';
-import { ConsumerService } from './consumer.service';
-import { Signal } from '../signal/schemas/signal.schema';
+import { AppModule } from '../../app.module';
+import { ConsumerService } from '../consumer.service';
+import { Signal } from '../../signal/schemas/signal.schema';
 
 // NOTE: This integration test requires running RabbitMQ and MongoDB services.
 // You can start them using `docker-compose up -d` from the root of the project.
