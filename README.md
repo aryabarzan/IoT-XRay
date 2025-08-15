@@ -30,6 +30,14 @@ The Swagger UI for the services will be available at:
 -   `iot-xray-producer`: http://localhost:4001/swagger
 -   `iot-xray-consumer`: http://localhost:4000/swagger
 
+### RabbitMQ Management Interface
+
+If you are running RabbitMQ via Docker Compose, you can access its management interface at:
+
+-   **RabbitMQ Management:** http://localhost:25672
+
+You can log in with the default credentials: `guest`/`guest`.
+
 ### 2. Running Locally
 
 You can also run the services locally without Docker. You will need to have RabbitMQ and MongoDB running on your local machine.
@@ -55,12 +63,17 @@ You can also run the services locally without Docker. You will need to have Rabb
 
 2.  **Install dependencies:**
 
-    For each service, navigate to its directory and install the dependencies:
+    Open two separate terminal windows. In each terminal, navigate to one of the service directories (`iot-xray-producer` or `iot-xray-consumer`) and install the dependencies:
 
+    **Terminal 1:**
     ```bash
     cd iot-xray-producer
     npm install
-    cd ../iot-xray-consumer
+    ```
+
+    **Terminal 2:**
+    ```bash
+    cd iot-xray-consumer
     npm install
     ```
 
