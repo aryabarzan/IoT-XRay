@@ -92,6 +92,10 @@ You can also run the services locally without Docker. You will need to have Rabb
 
 The `iot-xray-consumer` service has unit and integration tests.
 
+-   **Unit Tests:** Located in `src/**/*.spec.ts` files (e.g., `src/app.controller.spec.ts`, `src/consumer/consumer.spec.ts`).
+-   **Integration Tests:** Located in `src/**/*.integration.spec.ts` files (e.g., `src/consumer/consumer.integration.spec.ts`).
+-   **End-to-End Tests:** Located in `test/**/*.e2e-spec.ts` files (e.g., `test/app.e2e-spec.ts`).
+
 To run the tests, navigate to the `iot-xray-consumer` directory and run the following command:
 
 ```bash
