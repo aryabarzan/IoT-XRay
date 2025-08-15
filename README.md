@@ -93,6 +93,18 @@ You can also run the services locally without Docker. You will need to have Rabb
     npm run start:dev
     ```
 
+    Once both services are running, you can access them at:
+
+    -   `iot-xray-producer`: http://localhost:3001
+    -   `iot-xray-consumer`: http://localhost:3000
+
+    The Swagger UI for the services will be available at:
+
+    -   `iot-xray-producer`: http://localhost:3001/swagger
+    -   `iot-xray-consumer`: http://localhost:3000/swagger
+
+    To test the data flow, open the `iot-xray-producer` Swagger UI (http://localhost:3001/swagger). Navigate to the `/producer/publish-manual` endpoint. Copy the content of the `x-ray.json` file (located at the project root) and paste it into the request body. Execute the request. You should then observe that the data is saved into the `signal` collection in your MongoDB database.
+
 ## Running Tests
 
 The `iot-xray-consumer` service has unit and integration tests.
