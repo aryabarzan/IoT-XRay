@@ -11,7 +11,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { PointInfoDto } from 'src/consumer';
+import { PointInfoDto } from '../consumer';
 import { Signal } from './schemas';
 
 /**

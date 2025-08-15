@@ -3,9 +3,9 @@ import { Nack, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { DeviceDto, type XrayDataRequestDto } from './types';
 import { exchangeName } from '../common/exchange';
 import { SignalService } from '../signal';
+import { DeviceDto, type XrayDataRequestDto } from './types';
 
 @Injectable()
 export class ConsumerService {
@@ -13,6 +13,22 @@ export class ConsumerService {
 
   constructor(private readonly signalService: SignalService) {}
 
+  /**
+   * Asynchronously processes incoming X-ray data messages from a RabbitMQ queue.
+   *
+   * This method is a RabbitMQ subscriber that listens for messages on the
+   * 'xray_data_queue'. It handles the full message lifecycle, including
+   * validation, processing, and error handling.
+   *
+   * It uses the 'Nack' object to manage message acknowledgments:
+   * - A message is rejected and sent to a Dead Letter Queue (DLQ) if validation fails (`return new Nack(false)`).
+   * - A message is re-queued if a system error occurs during processing (`return new Nack(true)`),
+   * allowing for a retry.
+   *
+   * @param msg The raw message payload received from RabbitMQ.
+   * @returns A promise that resolves to a 'Nack' object to control message acknowledgment,
+   * either acknowledging, rejecting, or re-queueing the message.
+   */
   @RabbitSubscribe({
     exchange: exchangeName,
     routingKey: 'xray.data.#',
