@@ -4,8 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { exchangeName } from '../common/exchange';
+import { DeviceDto, type XrayDataRequestDto } from '../common/types/xray-data.type';
 import { SignalService } from '../signal';
-import { DeviceDto, type XrayDataRequestDto } from './types';
 
 /**
  * Service responsible for consuming and processing x-ray data messages from RabbitMQ.

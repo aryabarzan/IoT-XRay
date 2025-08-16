@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 import { exchangeName } from '../common/exchange';
-import { XrayDataRequestDto } from './types';
+import { XrayDataRequestDto } from './types/xray-data.type';
 
 /**
  * Service responsible for publishing x-ray data messages to a RabbitMQ exchange.

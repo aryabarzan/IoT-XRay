@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { DeviceDto, XrayDataRequestDto } from '../types';
+import { DeviceDto, XrayDataRequestDto } from '../types/xray-data.type';
 
 @Injectable()
 export class XrayDataPipe implements PipeTransform {

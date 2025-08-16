@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { XrayDataRequestDto } from '../consumer';
+import { XrayDataRequestDto } from '../common/types';
 import { Signal } from './schemas';
 import {
   CreateSignalDto,

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { PointInfoDto } from '../../consumer/types';
+import { PointInfoDto } from '../../common/types';
 
 /**
  * Represents a single processed signal containing time-series telemetry data from a device.
