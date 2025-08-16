@@ -84,16 +84,14 @@ You can also run the services locally without Docker. You will need to have Rabb
 
     Open two separate terminal windows. In each terminal, navigate to one of the service directories (`iot-xray-producer` or `iot-xray-consumer`) and start the service:
 
-    **Terminal 1:**
+    **Terminal 1 (iot-xray-producer):**
     ```bash
-    cd iot-xray-producer
-    npm run start:dev
+    npm run start
     ```
 
-    **Terminal 2:**
+    **Terminal 2 (iot-xray-consumer):**
     ```bash
-    cd iot-xray-consumer
-    npm run start:dev
+    npm run start
     ```
 
     Once both services are running, you can access them at:
@@ -118,8 +116,8 @@ The `iot-xray-consumer` service has unit and integration tests.
 
 To run the tests, navigate to the `iot-xray-consumer` directory and run the following command:
 
+**Terminal 2 (iot-xray-consumer):**
 ```bash
-cd iot-xray-consumer
 npm test
 ```
 
