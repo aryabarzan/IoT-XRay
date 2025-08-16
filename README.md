@@ -1,20 +1,20 @@
 # IoT X-Ray
 
-This project consists of two services: `iot-xray-producer` and `iot-xray-consumer`.
+This project consists of two separate NestJS apps: `iot-xray-producer` and `iot-xray-consumer`.
 
-The `iot-xray-producer` service is responsible for producing x-ray data. It has a Swagger endpoint that allows users to manually post test JSON data. Sample x-ray data can be found in `x-ray.json` at the project root. The producer then sends this data to the `iot-xray-consumer` service via RabbitMQ.
+The `iot-xray-producer` app is responsible for producing x-ray data. It has a Swagger endpoint that allows users to manually post test JSON data. Sample x-ray data can be found in `x-ray.json` at the project root. The producer then sends this data to the `iot-xray-consumer` app via RabbitMQ.
 
-The `iot-xray-consumer` service consumes the x-ray data from RabbitMQ, processes it, and saves it to a MongoDB database.
+The `iot-xray-consumer` app consumes the x-ray data from RabbitMQ, processes it, and saves it to a MongoDB database.
 
-## Running the Services
+## Running the Apps
 
-There are two ways to run the services:
+There are two ways to run the apps:
 
 ### 1. Using Docker Compose
 
-This is the recommended way to run the services. The `docker-compose.yml` file in the root of the project defines the services and their dependencies (RabbitMQ and MongoDB).
+This is the recommended way to run the apps. The `docker-compose.yml` file in the root of the project defines the apps and their dependencies (RabbitMQ and MongoDB).
 
-To run the services, execute the following command from the root of the project:
+To run the apps, execute the following command from the root of the project:
 
 ```bash
 docker-compose up -d
@@ -25,7 +25,7 @@ This will start the `iot-xray-producer`, `iot-xray-consumer`, RabbitMQ, and Mong
 -   `iot-xray-producer`: http://localhost:4001
 -   `iot-xray-consumer`: http://localhost:4000
 
-The Swagger UI for the services will be available at:
+The Swagger UI for the apps will be available at:
 
 -   `iot-xray-producer`: http://localhost:4001/swagger
 -   `iot-xray-consumer`: http://localhost:4000/swagger
@@ -43,11 +43,11 @@ You can log in with the default credentials: `guest`/`guest`.
 
 ### 2. Running Locally
 
-You can also run the services locally without Docker. You will need to have RabbitMQ and MongoDB running on your local machine.
+You can also run the apps locally without Docker. You will need to have RabbitMQ and MongoDB running on your local machine.
 
-1.  **Configure the services:**
+1.  **Configure the apps:**
 
-    For each service (`iot-xray-producer` and `iot-xray-consumer`), you will need to configure the `.env` file with the correct connection strings for RabbitMQ and MongoDB. You can also change the port for each service by modifying the `APP_PORT` variable in the `.env` file.
+    For each app (`iot-xray-producer` and `iot-xray-consumer`), you will need to configure the `.env` file with the correct connection strings for RabbitMQ and MongoDB. You can also change the port for each app by modifying the `APP_PORT` variable in the `.env` file.
 
     **`iot-xray-producer/.env`**
     ```
@@ -66,7 +66,7 @@ You can also run the services locally without Docker. You will need to have Rabb
 
 2.  **Install dependencies:**
 
-    Open two separate terminal windows. In each terminal, navigate to one of the service directories (`iot-xray-producer` or `iot-xray-consumer`) and install the dependencies:
+    Open two separate terminal windows. In each terminal, navigate to one of the app directories (`iot-xray-producer` or `iot-xray-consumer`) and install the dependencies:
 
     **Terminal 1:**
     ```bash
@@ -80,9 +80,9 @@ You can also run the services locally without Docker. You will need to have Rabb
     npm install
     ```
 
-3.  **Start the services:**
+3.  **Start the apps:**
 
-    Open two separate terminal windows. In each terminal, navigate to one of the service directories (`iot-xray-producer` or `iot-xray-consumer`) and start the service:
+    Open two separate terminal windows. In each terminal, navigate to one of the app directories (`iot-xray-producer` or `iot-xray-consumer`) and start the app:
 
     **Terminal 1 (iot-xray-producer):**
     ```bash
@@ -94,12 +94,12 @@ You can also run the services locally without Docker. You will need to have Rabb
     npm run start
     ```
 
-    Once both services are running, you can access them at:
+    Once both apps are running, you can access them at:
 
     -   `iot-xray-producer`: http://localhost:3001
     -   `iot-xray-consumer`: http://localhost:3000
 
-    The Swagger UI for the services will be available at:
+    The Swagger UI for the apps will be available at:
 
     -   `iot-xray-producer`: http://localhost:3001/swagger
     -   `iot-xray-consumer`: http://localhost:3000/swagger
@@ -108,7 +108,7 @@ You can also run the services locally without Docker. You will need to have Rabb
 
 ## Running Tests
 
-The `iot-xray-consumer` service has unit and integration tests.
+The `iot-xray-consumer` app has unit and integration tests.
 
 -   **Unit Tests:** Located in `src/**/*.spec.ts` files (e.g., `./iot-xray-consumer/src/consumer/test/consumer.spec.ts`).
 -   **Integration Tests:** Located in `src/**/*.integration.spec.ts` files (e.g., `./iot-xray-consumer/src/consumer/test/consumer.integration.spec.ts`).
@@ -136,8 +136,8 @@ RABBITMQ_PREFETCH_COUNT=2
 
 The data flow within the IoT X-Ray system is as follows:
 
-1.  **Producer Sends Data:** The `iot-xray-producer` service generates x-ray data (either manually via its Swagger UI or through other means) and publishes these messages to a RabbitMQ exchange.
-2.  **Consumer Receives Data:** The `iot-xray-consumer` service, specifically its `ConsumerService`, is configured to listen for messages on a RabbitMQ queue that is bound to the producer's exchange.
+1.  **Producer Sends Data:** The `iot-xray-producer` app generates x-ray data (either manually via its Swagger UI or through other means) and publishes these messages to a RabbitMQ exchange.
+2.  **Consumer Receives Data:** The `iot-xray-consumer` app, specifically its `ConsumerService`, is configured to listen for messages on a RabbitMQ queue that is bound to the producer's exchange.
 3.  **Data Processing:** Upon receiving a message, the `ConsumerService` processes the raw x-ray data. This processing may involve validation, transformation, or enrichment of the data.
 4.  **Signal Service Handles Data:** The processed data is then passed to the `SignalService` within the `iot-xray-consumer`.
 5.  **Data Persistence:** The `SignalService` is responsible for persisting the refined signal data into the MongoDB database, adhering to the schema defined in `signal/schemas/signal.schema.ts`.
